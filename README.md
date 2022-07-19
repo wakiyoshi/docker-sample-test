@@ -50,3 +50,48 @@ DB_USERNAME=root
 DB_PASSWORD=root
 
 
+-------------------------------
+
+課題２.docker-composeでlaravel環境を立ち上げる。
+
+1.docker-compose.ymlファイルをdockerのディレクトリ下（ディレクトリ名/docker-compose.yml）に作成。
+
+2.docker-compose.ymlファイルを以下のように編集（例）、インデントは基本2つで統一する。
+
+docker-compose
+version: '3.9'
+services:
+  php:
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    volumes:
+      - ./src/:/php
+  nginx:
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    ports:
+      - 80:80
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+        - php
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: sample
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+volumes:
+    mysql-data:
+    
+    
+3.docker-compose up -d --buildでコンテナを起動する。
+
+
