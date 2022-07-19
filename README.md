@@ -103,7 +103,6 @@ RUN apt-get update \
   && docker-php-ext-configure gd --with-freetype --with-jpeg \
   && docker-php-ext-install -j$(nproc) gd zip pdo_mysql
 
-#Composer install
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 RUN php composer-setup.php --version=2.2.6
 RUN php -r "unlink('composer-setup.php');"
@@ -113,7 +112,6 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV COMPOSER_HOME /composer
 ENV PATH $PATH:/composer/vendor/bin
 
-# Node.js install
 RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
 RUN apt-get install -y nodejs && \
     npm i -g n && \
@@ -130,7 +128,7 @@ server {
     listen 80;
     root  /var/www/html/public;
     index index.php index.html;
-
+    
     location / {
         try_files $uri $uri/ /index.php$is_args$args;
     }
@@ -144,6 +142,5 @@ server {
         fastcgi_param PATH_INFO $fastcgi_path_info;
     }
 }
-
 
 5.docker-compose up -d --buildでコンテナを起動する。
